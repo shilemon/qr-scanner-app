@@ -1,0 +1,37 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+}
+
+.container {
+  padding: 20px;
+  text-align: center;
+}
+
+#reader {
+  width: 300px;
+  margin: 20px auto;
+}
+
+.success {
+  background: #4caf50;
+  color: white;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.history {
+  margin-top: 20px;
+}
+
+.card {
+  background: white;
+  padding: 10px;
+  margin: 10px auto;
+  width: 90%;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: left;
+}
