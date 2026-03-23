@@ -18,7 +18,7 @@ function App() {
         setMessage("✅ Scan Successful!");
 
         try {
-          await axios.post("http://192.168.1.105:5000/api/scan", {
+          await axios.post("http://3.111.41.149:5000/api/scan", {
             value: decodedText,
             type: "QR/Barcode",
           });
@@ -40,7 +40,7 @@ function App() {
 
   const fetchHistory = async () => {
     try {
-      const res = await axios.get("http://192.168.1.105:5000/api/history");
+      const res = await axios.get("http://3.111.41.149:5000/api/history");
       setHistory(res.data);
     } catch (err) {
       console.error(err);
