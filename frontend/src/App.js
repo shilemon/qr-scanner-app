@@ -11,48 +11,54 @@ function App() {
 
   const API = "http://192.168.1.105:5000";
 
-  useEffect(() => {
-    const scanner = new Html5QrcodeScanner("reader", {
-      fps: 10,
-      qrbox: 300, // bigger scanner
-    });
+useEffect(() => {
+  const scanner = new Html5QrcodeScanner("reader", {
+    fps: 10,
+    qrbox: 300,
+  });
 
-    setStatus("📷 Scanning...");
+  setStatus("📷 Scanning...");
 
-    scanner.render(
-      async (decodedText) => {
-        setMessage("✅ Scan Successful!");
-        setLoading(true);
+  scanner.render(
+    async (decodedText) => {
+      // 🛑 STOP scanner after success
+      scanner.clear();
 
-        // 🔊 Beep sound
-        const audio = new Audio(
-          "https://www.soundjay.com/buttons/sounds/beep-01a.mp3"
-        );
-        audio.play();
+      setMessage("✅ Scan Successful!");
+      setLoading(true);
 
-        try {
-          await axios.post(`${API}/api/scan`, {
-            value: decodedText,
-            type: "QR/Barcode",
-          });
+      // 🔊 Beep
+      const audio = new Audio(
+        "https://www.soundjay.com/buttons/sounds/beep-01a.mp3"
+      );
+      audio.play();
 
-          fetchHistory();
-        } catch (err) {
-          console.error(err);
-          setStatus("❌ Failed to save scan");
-        }
+      try {
+        await axios.post("http://192.168.1.105:5000/api/scan", {
+          value: decodedText,
+          type: "QR/Barcode",
+        });
 
-        setLoading(false);
-        setTimeout(() => setMessage(""), 2000);
-      },
-      (error) => {
-        console.warn(error);
-        setStatus("⚠️ Camera error or permission denied");
+        fetchHistory();
+      } catch (err) {
+        console.error(err);
+        setStatus("❌ Failed to save scan");
       }
-    );
 
-    fetchHistory();
-  }, []);
+      setLoading(false);
+
+      // 🔄 Restart scanner after 2 seconds
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    },
+    (error) => {
+      // ignore continuous scan errors
+    }
+  );
+
+  fetchHistory();
+}, []);
 
   const fetchHistory = async () => {
     try {
