@@ -8,9 +8,9 @@ app.use(express.json());
 
 // 🔥 Replace with your RDS or local MySQL config
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "", // default XAMPP
+  host: "scanner-db.crygmg0qymcz.ap-south-1.rds.amazonaws.com",
+  user: "admin",
+  password: "Emon1234",
   database: "scanner_db",
 });
 
