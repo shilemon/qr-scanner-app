@@ -9,7 +9,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("Initializing scanner...");
 
-  const API = "http://192.168.1.105:5000";
+  const API = "http://3.111.41.149:5000";
 
 useEffect(() => {
   const scanner = new Html5QrcodeScanner("reader", {
