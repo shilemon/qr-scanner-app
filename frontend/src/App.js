@@ -6,19 +6,32 @@ import "./App.css";
 function App() {
   const [history, setHistory] = useState([]);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState("Initializing scanner...");
+
+  const API = "http://192.168.1.105:5000";
 
   useEffect(() => {
     const scanner = new Html5QrcodeScanner("reader", {
       fps: 10,
-      qrbox: 250,
+      qrbox: 300, // bigger scanner
     });
+
+    setStatus("📷 Scanning...");
 
     scanner.render(
       async (decodedText) => {
         setMessage("✅ Scan Successful!");
+        setLoading(true);
+
+        // 🔊 Beep sound
+        const audio = new Audio(
+          "https://www.soundjay.com/buttons/sounds/beep-01a.mp3"
+        );
+        audio.play();
 
         try {
-          await axios.post("http://3.111.41.149:5000/api/scan", {
+          await axios.post(`${API}/api/scan`, {
             value: decodedText,
             type: "QR/Barcode",
           });
@@ -26,12 +39,15 @@ function App() {
           fetchHistory();
         } catch (err) {
           console.error(err);
+          setStatus("❌ Failed to save scan");
         }
 
+        setLoading(false);
         setTimeout(() => setMessage(""), 2000);
       },
       (error) => {
         console.warn(error);
+        setStatus("⚠️ Camera error or permission denied");
       }
     );
 
@@ -40,10 +56,11 @@ function App() {
 
   const fetchHistory = async () => {
     try {
-      const res = await axios.get("http://3.111.41.149:5000/api/history");
+      const res = await axios.get(`${API}/api/history`);
       setHistory(res.data);
     } catch (err) {
       console.error(err);
+      setStatus("❌ Failed to load history");
     }
   };
 
@@ -51,10 +68,19 @@ function App() {
     <div className="container">
       <h2>📷 QR & Barcode Scanner</h2>
 
+      {/* Success Message */}
       {message && <div className="success">{message}</div>}
 
+      {/* Scanner */}
       <div id="reader"></div>
 
+      {/* Status */}
+      <div className="status">{status}</div>
+
+      {/* Loading */}
+      {loading && <p>⏳ Saving scan...</p>}
+
+      {/* History */}
       <h3>📜 Scan History</h3>
 
       <div className="history">
