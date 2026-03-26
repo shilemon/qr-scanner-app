@@ -5,6 +5,8 @@ body {
 }
 
 .container {
+  max-width: 500px;
+  margin: auto;
   padding: 20px;
   text-align: center;
 }
@@ -15,46 +17,32 @@ h2 {
 
 #reader {
   width: 100%;
-  max-width: 400px;
-  margin: 20px auto;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 2px solid #ddd;
+  margin: 20px 0;
 }
 
-/* Success animation */
 .success {
-  background: #4caf50;
-  color: white;
-  padding: 12px;
-  margin-bottom: 10px;
+  background: #d4edda;
+  color: #155724;
+  padding: 10px;
   border-radius: 8px;
-  font-weight: bold;
+  margin-bottom: 10px;
 }
 
-/* Scanner status */
 .status {
   margin: 10px 0;
   font-size: 14px;
   color: #555;
 }
 
-/* History */
 .history {
   margin-top: 20px;
 }
 
 .card {
   background: white;
-  padding: 15px;
-  margin: 10px auto;
-  width: 95%;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
   text-align: left;
-  transition: transform 0.2s;
-}
-
-.card:hover {
-  transform: scale(1.02);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
