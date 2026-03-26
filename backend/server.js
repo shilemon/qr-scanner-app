@@ -3,10 +3,16 @@ const cors = require("cors");
 const mysql = require("mysql2");
 
 const app = express();
-app.use(cors());
+
+// ✅ Allow all origins (important for Vercel)
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST"]
+}));
+
 app.use(express.json());
 
-// 🔥 Replace with your RDS or local MySQL config
+// ✅ RDS Connection
 const db = mysql.createConnection({
   host: "scanner-db.crygmg0qymcz.ap-south-1.rds.amazonaws.com",
   user: "admin",
@@ -17,9 +23,9 @@ const db = mysql.createConnection({
 // Connect DB
 db.connect((err) => {
   if (err) {
-    console.error("DB connection error:", err);
+    console.error("❌ DB connection error:", err);
   } else {
-    console.log("Connected to DB");
+    console.log("✅ Connected to RDS");
   }
 });
 
@@ -27,25 +33,30 @@ db.connect((err) => {
 app.post("/api/scan", (req, res) => {
   const { value, type } = req.body;
 
+  if (!value) return res.status(400).send("No value");
+
   const sql = "INSERT INTO scans (value, type) VALUES (?, ?)";
-  db.query(sql, [value, type], (err, result) => {
+  db.query(sql, [value, type], (err) => {
     if (err) {
       console.error(err);
       return res.status(500).send("DB error");
     }
-    res.send("Scan saved");
+    res.json({ message: "Saved" });
   });
 });
 
 // 👉 Get history
 app.get("/api/history", (req, res) => {
   db.query("SELECT * FROM scans ORDER BY id DESC", (err, result) => {
-    if (err) return res.status(500).send(err);
+    if (err) {
+      console.error(err);
+      return res.status(500).send("Error");
+    }
     res.json(result);
   });
 });
 
 // Start server
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+app.listen(5000, "0.0.0.0", () => {
+  console.log("🚀 Server running on port 5000");
 });
